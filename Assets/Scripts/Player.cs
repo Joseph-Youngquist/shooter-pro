@@ -23,7 +23,8 @@ public class Player : MonoBehaviour
         // and will not allow vertical movement.
 
         float inputDirection = Input.GetAxis("Horizontal");
-        transform.Translate(Vector3.right * inputDirection * _speed * Time.deltaTime);
+        Vector3 direction = new Vector3(inputDirection, 0, 0);
+        transform.Translate( direction * _speed * Time.deltaTime);
 
     }
 }
