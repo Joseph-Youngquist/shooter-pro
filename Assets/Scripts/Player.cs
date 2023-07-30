@@ -19,8 +19,11 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float inputDirection = Input.GetAxis("Horizontal");
+        // Player movement for our game will only be in the horizontal space
+        // and will not allow vertical movement.
 
+        float inputDirection = Input.GetAxis("Horizontal");
         transform.Translate(Vector3.right * inputDirection * _speed * Time.deltaTime);
+
     }
 }
