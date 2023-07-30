@@ -24,18 +24,18 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float inputDirection = Input.GetAxis("Horizontal");
-        Vector3 direction = new Vector3(inputDirection, 0, 0);
-        transform.Translate( direction * _speed * Time.deltaTime);
+        CalculatePlayerMovement();
+    }
 
-        // Need to restrict player movement along the horizonal.
-        // Need to keep user from moving out of view left and right.
-        // If player is along the left side of the screen
-        // then keep player from moving past the left side of the screen.
-        // If player is along the right side of the screen
-        // then keep player from moving past the right side of the screen.
-        float currentX = transform.position.x;
-        float newPositionX = Mathf.Clamp(currentX, _leftEdgeOfScreen, _rightEdgeOfScreen);
+    void CalculatePlayerMovement()
+    {
+        float inputDirection = Input.GetAxis("Horizontal");
+        Vector3 newDirection = new Vector3(inputDirection, 0, 0);
+        transform.Translate(newDirection * _speed * Time.deltaTime);
+
+        float currentXPosition = transform.position.x;
+        float newPositionX = Mathf.Clamp(currentXPosition, _leftEdgeOfScreen, _rightEdgeOfScreen);
         transform.position = new Vector3(newPositionX, _verticalStartPosition, 0);
+
     }
 }
