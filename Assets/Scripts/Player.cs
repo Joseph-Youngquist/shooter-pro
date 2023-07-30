@@ -8,10 +8,16 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _speed = 5.5f; // initial player speed
 
+    [SerializeField]
+    private float _verticalStartPosition = -4.0f;
+
+    private float _leftEdgeOfScreen = -9.2f;
+    private float _rightEdgeOfScreen = 9.2f;
+
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector3(0, -4, 0);
+        transform.position = new Vector3(0, _verticalStartPosition, 0);
 
     }
 
@@ -28,5 +34,8 @@ public class Player : MonoBehaviour
         // then keep player from moving past the left side of the screen.
         // If player is along the right side of the screen
         // then keep player from moving past the right side of the screen.
+        float currentX = transform.position.x;
+        float newPositionX = Mathf.Clamp(currentX, _leftEdgeOfScreen, _rightEdgeOfScreen);
+        transform.position = new Vector3(newPositionX, _verticalStartPosition, 0);
     }
 }
