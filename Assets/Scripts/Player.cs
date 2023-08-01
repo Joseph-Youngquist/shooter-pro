@@ -21,6 +21,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _laserYOffset = 0.5f;
 
+    [SerializeField]
+    private float _fireDelay = 0.2f;
+    private float _nextFireAt = -1f;
+
     private List<GameObject> _availableLasers = new List<GameObject>();
 
     // Start is called before the first frame update
@@ -35,8 +39,9 @@ public class Player : MonoBehaviour
     {
         CalculatePlayerMovement();
 
-        if (Input.GetKeyDown(KeyCode.Space)) 
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _nextFireAt) 
         {
+            _nextFireAt = Time.time + _fireDelay;
             FireLaser();
         }
     }
