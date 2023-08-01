@@ -18,7 +18,10 @@ public class Player : MonoBehaviour
     private float _leftEdgeOfScreen = -9.2f;
     private float _rightEdgeOfScreen = 9.2f;
 
-    private GameObject[] _availableLasers;
+    [SerializeField]
+    private float _laserYOffset = 0.5f;
+
+    private List<GameObject> _availableLasers = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +43,29 @@ public class Player : MonoBehaviour
 
     void FireLaser()
     {
-        Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+        GetOrMakeLaser();
+    }
+
+    void GetOrMakeLaser()
+    {
+        Vector3 laserPosition = new Vector3(transform.position.x, transform.position.y + _laserYOffset, 0f);
+        if (_availableLasers.Count > 0)
+        {
+            int lastIndex = _availableLasers.Count - 1;
+            GameObject laser = _availableLasers[lastIndex];
+            _availableLasers.RemoveAt(lastIndex);
+            laser.transform.position = laserPosition;
+            laser.SetActive(true);
+        }
+        else
+        {
+            Instantiate(_laserPrefab, laserPosition, Quaternion.identity);
+        }
+
+    }
+    public void AddLaserToPool(GameObject laser)
+    {
+        _availableLasers.Add(laser);
     }
     void CalculatePlayerMovement()
     {
