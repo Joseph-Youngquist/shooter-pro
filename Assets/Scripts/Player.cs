@@ -48,7 +48,8 @@ public class Player : MonoBehaviour
 
     void GetOrMakeLaser()
     {
-        Vector3 laserPosition = new Vector3(transform.position.x, transform.position.y + _laserYOffset, 0f);
+        Vector3 laserPosition = transform.position + new Vector3(0f, _laserYOffset, 0f);
+
         if (_availableLasers.Count > 0)
         {
             int lastIndex = _availableLasers.Count - 1;
