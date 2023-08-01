@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -11,8 +12,13 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _verticalStartPosition = -4.0f;
 
+    [SerializeField]
+    private GameObject _laserPrefab;
+
     private float _leftEdgeOfScreen = -9.2f;
     private float _rightEdgeOfScreen = 9.2f;
+
+    private GameObject[] _availableLasers;
 
     // Start is called before the first frame update
     void Start()
@@ -25,8 +31,17 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculatePlayerMovement();
+
+        if (Input.GetKeyDown(KeyCode.Space)) 
+        {
+            FireLaser();
+        }
     }
 
+    void FireLaser()
+    {
+        Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+    }
     void CalculatePlayerMovement()
     {
         float inputDirection = Input.GetAxis("Horizontal");
