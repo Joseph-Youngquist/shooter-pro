@@ -25,6 +25,10 @@ public class Player : MonoBehaviour
     private float _fireDelay = 0.2f;
     private float _nextFireAt = -1f;
 
+    [SerializeField]
+    private int _lives = 3;
+    private int _score = 0;
+
     private List<GameObject> _availableLasers = new List<GameObject>();
 
     // Start is called before the first frame update
@@ -46,6 +50,19 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void AddScore(int points)
+    {
+        _score += points;
+        Debug.Log("Player's Score: " + _score);
+    }
+    public void Hit()
+    {
+        _lives -= 1;
+        if (_lives == 0)
+        {
+            Destroy(this.gameObject);
+        }
+    }
     void FireLaser()
     {
         GetOrMakeLaser();
