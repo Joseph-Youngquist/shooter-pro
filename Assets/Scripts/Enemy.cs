@@ -14,12 +14,20 @@ public class Enemy : MonoBehaviour
     private float _topMaxY;
     private float _offscreenY;
 
+    private Camera _camera = Camera.main;
+    private Player _player;
+
     // Start is called before the first frame update
     void Start()
     {
-        Camera cam = Camera.main;
+        _player = GameObject.Find("Player").GetComponent<Player>();
 
-        Vector3 point = cam.ScreenToWorldPoint(new Vector3(0f, Screen.height, cam.transform.position.z));
+        if ( _player != null )
+        {
+            Debug.Log("Enemy::Start() - Player is null");
+        }
+
+        Vector3 point = _camera.ScreenToWorldPoint(new Vector3(0f, Screen.height, _camera.transform.position.z));
         _leftMinX = -1 * point.x;
         _topMaxY = -1 * point.y;
         _offscreenY = (_topMaxY + transform.localScale.y) * -1;
