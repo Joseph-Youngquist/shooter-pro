@@ -14,19 +14,21 @@ public class Enemy : MonoBehaviour
     private float _topMaxY;
     private float _offscreenY;
 
-    private Camera _camera = Camera.main;
     private Player _player;
-
+    private Camera _camera;
     // Start is called before the first frame update
     void Start()
     {
-        _player = GameObject.Find("Player").GetComponent<Player>();
+        _camera = Camera.main;
 
-        if ( _player != null )
+        if (GameObject.Find("Player").TryGetComponent<Player>(out Player outPlayer))
         {
-            Debug.Log("Enemy::Start() - Player is null");
+            _player = outPlayer;
+        } else
+        {
+            Debug.LogError("Enemy::Start() - Player Not Found.");
         }
-
+        
         Vector3 point = _camera.ScreenToWorldPoint(new Vector3(0f, Screen.height, _camera.transform.position.z));
         _leftMinX = -1 * point.x;
         _topMaxY = -1 * point.y;
@@ -41,6 +43,17 @@ public class Enemy : MonoBehaviour
         CalculateMovement();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.CompareTag("Player"))
+        {
+            _player.Hit();
+            Destroy(this.gameObject);
+        } else if (other.transform.CompareTag("Laser"))
+        {
+            Destroy(this.gameObject);
+        }
+    }
     void PickRandomHorizontalPosition()
     {
         float randomXPosition = Random.Range(_leftMinX, Mathf.Abs(_leftMinX));
