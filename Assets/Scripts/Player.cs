@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private int _lives = 3;
+    private int _score = 0;
 
     private List<GameObject> _availableLasers = new List<GameObject>();
 
@@ -47,6 +48,12 @@ public class Player : MonoBehaviour
             _nextFireAt = Time.time + _fireDelay;
             FireLaser();
         }
+    }
+
+    public void AddScore(int points)
+    {
+        _score += points;
+        Debug.Log("Player's Score: " + _score);
     }
     public void Hit()
     {

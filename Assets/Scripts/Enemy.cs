@@ -6,6 +6,8 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
+    private int _enemyScoreValue = 10;
+    [SerializeField]
     private float _speed = 4.0f;
     [SerializeField]
     private float _offsetPositionY = 2f;
@@ -51,6 +53,8 @@ public class Enemy : MonoBehaviour
             Destroy(this.gameObject);
         } else if (other.transform.CompareTag("Laser"))
         {
+            _player.AddScore(_enemyScoreValue);
+            Destroy(other.gameObject);
             Destroy(this.gameObject);
         }
     }
