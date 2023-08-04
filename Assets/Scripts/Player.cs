@@ -7,6 +7,9 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField]
+    private SpawnManager _spawnManager;
+
+    [SerializeField]
     private float _speed = 5.5f; // initial player speed
 
     [SerializeField]
@@ -36,6 +39,11 @@ public class Player : MonoBehaviour
     {
         transform.position = new Vector3(0, _verticalStartPosition, 0);
 
+        if(_spawnManager == null)
+        {
+            Debug.LogError("Player::Start() - SpawnManager is NULL.");
+        }
+
     }
 
     // Update is called once per frame
@@ -60,6 +68,7 @@ public class Player : MonoBehaviour
         _lives -= 1;
         if (_lives == 0)
         {
+            _spawnManager.OnPlayerDeath();
             Destroy(this.gameObject);
         }
     }
