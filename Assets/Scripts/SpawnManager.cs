@@ -17,10 +17,10 @@ public class SpawnManager : MonoBehaviour
     private GameObject _enemyPrefab;
     
     [SerializeField]
-    private float _minimumSpawnDelayInSeconds = 5f;
+    private float _minimumSpawnDelayInSeconds = 1f;
     
     [SerializeField]
-    private float _maximumSpawnDelayInSeconds = 10f;
+    private float _maximumSpawnDelayInSeconds = 2.5f;
 
     private int _enemiesDestroyedThisLevel = 0;
     private int _maximumEnemiesThisLevel = 0;
@@ -28,7 +28,6 @@ public class SpawnManager : MonoBehaviour
     private float _levelClearedTime; // Time the player takes to clear the level
     private float _levelStartTime; // Time this level started so we can calculate time taken to clear level
 
-    private bool _canSpawnEnemies = false;
     private int _spawnedEnemyThisLevel = 0;
 
     // Start is called before the first frame update
@@ -50,6 +49,7 @@ public class SpawnManager : MonoBehaviour
     private void calculateTimeTakenToClearLevel()
     {
         _levelClearedTime = Time.time - _levelStartTime;
+        Debug.Log("Level Cleared in: " + _levelClearedTime + " seconds.");
     }
     public void StartNewEnemyWave(int currentLevel)
     {
@@ -57,6 +57,11 @@ public class SpawnManager : MonoBehaviour
         _enemiesDestroyedThisLevel = 0; // reset to zero kills this level.
         _maximumEnemiesThisLevel = CalculateMaxEnemies(currentLevel);
         StartCoroutine(SpawnEnemies(true));
+        Debug.Log(
+            "New Wave Started! Current Level: "
+            + currentLevel + "With " + _maximumEnemiesThisLevel
+            + " to destroy!"
+        );
 
     }
     public void EnemyDestroyed()
@@ -67,12 +72,14 @@ public class SpawnManager : MonoBehaviour
         {
             WaveCleared();
         }
+        Debug.Log("Enemies Destroyed This Level: " + _enemiesDestroyedThisLevel);
     }
     private void WaveCleared()
     {
         // stop the SpawnEnemies Coroutine.
         // get the time taken to clear this level.
         // calculate the next wave enemy maximum.
+        Debug.Log("Wave Cleared!");
         StopCoroutine(SpawnEnemies(false));
         calculateTimeTakenToClearLevel();
         StartNewEnemyWave(_level++);
@@ -100,6 +107,7 @@ public class SpawnManager : MonoBehaviour
     {
         while(canSpawn)
         {
+            // TODO: need to use an object pool to pull from or make a new enemy instance.
             Instantiate(_enemyPrefab);
             _spawnedEnemyThisLevel++;
 
