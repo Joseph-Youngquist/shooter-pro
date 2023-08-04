@@ -5,6 +5,8 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
+    private GameObject _enemyContainer;
+    [SerializeField]
     private float _difficultyScalingFactor = 1.0f;
 
     [SerializeField]
@@ -17,13 +19,18 @@ public class SpawnManager : MonoBehaviour
     private GameObject _enemyPrefab;
     
     [SerializeField]
-    private float _minimumSpawnDelayInSeconds = 1f;
+    private float _minimumSpawnDelayInSeconds = 0.5f;
     
     [SerializeField]
-    private float _maximumSpawnDelayInSeconds = 2.5f;
+    private float _maximumSpawnDelayInSeconds = 3.0f;
 
     private int _enemiesDestroyedThisLevel = 0;
+    [SerializeField]
     private int _maximumEnemiesThisLevel = 0;
+
+    [SerializeField]
+    private bool _spawnAllowed;
+
     private int _level = 1; // The current level the player is on
     private float _levelClearedTime; // Time the player takes to clear the level
     private float _levelStartTime; // Time this level started so we can calculate time taken to clear level
@@ -38,7 +45,13 @@ public class SpawnManager : MonoBehaviour
             Debug.LogError("SpawnManager::Start() - Enemy Prefab is NULL.");
         }
 
+        if(_enemyContainer == null)
+        {
+            Debug.LogError("SpawnManager::Start() - Enemy Container is NULL.");
+        }
+
         StartNewEnemyWave(_level); // start level 1
+        
     }
 
     // Update is called once per frame
@@ -51,17 +64,21 @@ public class SpawnManager : MonoBehaviour
         _levelClearedTime = Time.time - _levelStartTime;
         Debug.Log("Level Cleared in: " + _levelClearedTime + " seconds.");
     }
-    public void StartNewEnemyWave(int currentLevel)
+    private void StartNewEnemyWave(int currentLevel)
     {
         _levelStartTime = Time.time; // timestamp the start of this level.
         _enemiesDestroyedThisLevel = 0; // reset to zero kills this level.
+        _spawnedEnemyThisLevel = 0;     // reset spawned count to zero this level.
+        _spawnAllowed = true;
+
         _maximumEnemiesThisLevel = CalculateMaxEnemies(currentLevel);
-        StartCoroutine(SpawnEnemies(true));
+        
         Debug.Log(
             "New Wave Started! Current Level: "
-            + currentLevel + "With " + _maximumEnemiesThisLevel
+            + currentLevel + ". With " + _maximumEnemiesThisLevel
             + " to destroy!"
         );
+        StartCoroutine(SpawnEnemies());
 
     }
     public void EnemyDestroyed()
@@ -79,8 +96,9 @@ public class SpawnManager : MonoBehaviour
         // stop the SpawnEnemies Coroutine.
         // get the time taken to clear this level.
         // calculate the next wave enemy maximum.
+        StopAllCoroutines();
+        _spawnAllowed = false;
         Debug.Log("Wave Cleared!");
-        StopCoroutine(SpawnEnemies(false));
         calculateTimeTakenToClearLevel();
         StartNewEnemyWave(_level++);
     }
@@ -101,21 +119,29 @@ public class SpawnManager : MonoBehaviour
     }
 
     private bool AreEnemeisAllowedToSpawn() {
-        return _spawnedEnemyThisLevel < _maximumEnemiesThisLevel;
+        _spawnAllowed = _spawnedEnemyThisLevel < _maximumEnemiesThisLevel;
+        return _spawnAllowed;
     }
-    IEnumerator SpawnEnemies(bool canSpawn)
+    IEnumerator SpawnEnemies()
     {
-        while(canSpawn)
+        while(AreEnemeisAllowedToSpawn())
         {
             // TODO: need to use an object pool to pull from or make a new enemy instance.
-            Instantiate(_enemyPrefab);
+            Debug.Log("Spawning a new Enemy.");
+            GameObject newEnemy = Instantiate(_enemyPrefab);
+            newEnemy.transform.SetParent(_enemyContainer.transform);
             _spawnedEnemyThisLevel++;
 
-            canSpawn = AreEnemeisAllowedToSpawn();
             float timeToWait = Random.Range(_minimumSpawnDelayInSeconds, _maximumSpawnDelayInSeconds);
             // Don't count the time we wait as part of the time taken to clear the level.
             _levelStartTime -= timeToWait;
             yield return new WaitForSeconds(timeToWait);
         }
+        Debug.Log("SpawnEnemies stopped.");
+    }
+
+    public void OnPlayerDeath()
+    {
+        _spawnAllowed = false;
     }
 }

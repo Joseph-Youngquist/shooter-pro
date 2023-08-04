@@ -30,7 +30,11 @@ public class Enemy : MonoBehaviour
             _player = outPlayer;
         } else
         {
-            Debug.LogError("Enemy::Start() - Player Not Found.");
+            // TODO: Game OVER!
+            Debug.LogError("Enemy::Start() - Game Over! Player Not Found.");
+            Destroy(this.gameObject);
+            return;
+            
         }
 
         if (GameObject.Find("Spawn_Manager").TryGetComponent<SpawnManager>(out SpawnManager outManager))

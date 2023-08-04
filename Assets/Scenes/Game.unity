@@ -320,6 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04f98eb40994b654dbd227d47266bb0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnManager: {fileID: 1558961849}
   _speed: 5.5
   _verticalStartPosition: -4
   _laserPrefab: {fileID: 4184006939128046684, guid: 6c0db486e0162d64da9d22a474e29da2,
@@ -343,6 +344,36 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &1166026935
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1166026936}
+  m_Layer: 0
+  m_Name: Enemy_Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1166026936
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1166026935}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1558961850}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1199633940
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,13 +486,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8079251b223a69469bddfe540586cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyContainer: {fileID: 1166026935}
   _difficultyScalingFactor: 1
   _baseEnemies: 10
   _enemiesPerLevel: 2
   _enemyPrefab: {fileID: 6514939731247581756, guid: 0d67cb2ed0e97794e80dc9cf8d0163ba,
     type: 3}
-  _minimumSpawnDelayInSeconds: 5
-  _maximumSpawnDelayInSeconds: 10
+  _minimumSpawnDelayInSeconds: 0.5
+  _maximumSpawnDelayInSeconds: 3
+  _maximumEnemiesThisLevel: 0
+  _spawnAllowed: 0
 --- !u!4 &1558961850
 Transform:
   m_ObjectHideFlags: 0
@@ -472,7 +506,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1166026936}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
