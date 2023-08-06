@@ -118,10 +118,6 @@ public class SpawnManager : MonoBehaviour
         return (int)(_baseEnemies + _enemiesPerLevel * (level - 1) * level * _difficultyScalingFactor);
     }
 
-    private bool AreEnemeisAllowedToSpawn() {
-        _spawnAllowed = _spawnedEnemyThisLevel < _maximumEnemiesThisLevel;
-        return _spawnAllowed;
-    }
     IEnumerator SpawnEnemies()
     {
         while(_spawnAllowed)
