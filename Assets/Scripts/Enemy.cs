@@ -25,24 +25,25 @@ public class Enemy : MonoBehaviour
     {
         _camera = Camera.main;
 
-        if (GameObject.Find("Player").TryGetComponent<Player>(out Player outPlayer))
-        {
-            _player = outPlayer;
-        } else
-        {
-            // TODO: Game OVER!
-            Debug.LogError("Enemy::Start() - Game Over! Player Not Found.");
-            Destroy(this.gameObject);
-            return;
-            
-        }
-
+        
         if (GameObject.Find("Spawn_Manager").TryGetComponent<SpawnManager>(out SpawnManager outManager))
         {
             _spawnManager = outManager;
         } else
         {
             Debug.LogError("Enemy::Start() - SpawnManager is Null.");
+        }
+
+        if (GameObject.Find("Player").TryGetComponent<Player>(out Player outPlayer))
+        {
+            _player = outPlayer;
+        }
+        else
+        {
+            // TODO: Game OVER!
+            _spawnManager.GameOver(true);
+            Destroy(this.gameObject);
+
         }
 
         Vector3 point = _camera.ScreenToWorldPoint(new Vector3(0f, Screen.height, _camera.transform.position.z));

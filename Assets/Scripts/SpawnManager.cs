@@ -124,7 +124,7 @@ public class SpawnManager : MonoBehaviour
     }
     IEnumerator SpawnEnemies()
     {
-        while(AreEnemeisAllowedToSpawn())
+        while(_spawnAllowed)
         {
             // TODO: need to use an object pool to pull from or make a new enemy instance.
             Debug.Log("Spawning a new Enemy.");
@@ -142,6 +142,12 @@ public class SpawnManager : MonoBehaviour
 
     public void OnPlayerDeath()
     {
+        _spawnAllowed = false;
+    }
+
+    public void GameOver(bool status)
+    {
+        // TODO: Need to implement game over...
         _spawnAllowed = false;
     }
 }
