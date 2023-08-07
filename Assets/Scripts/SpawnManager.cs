@@ -35,6 +35,7 @@ public class SpawnManager : MonoBehaviour
     private float _levelClearedTime; // Time the player takes to clear the level
     private float _levelStartTime; // Time this level started so we can calculate time taken to clear level
 
+    [SerializeField]
     private int _spawnedEnemyThisLevel = 0;
 
     // Start is called before the first frame update

@@ -359,12 +359,13 @@ MonoBehaviour:
   _difficultyScalingFactor: 1
   _baseEnemies: 10
   _enemiesPerLevel: 2
-  _enemyPrefab: {fileID: 6514939731247581756, guid: 0d67cb2ed0e97794e80dc9cf8d0163ba,
+  _enemyPrefab: {fileID: 766688267943856844, guid: 0d67cb2ed0e97794e80dc9cf8d0163ba,
     type: 3}
   _minimumSpawnDelayInSeconds: 0.5
   _maximumSpawnDelayInSeconds: 3
   _maximumEnemiesThisLevel: 0
   _spawnAllowed: 0
+  _spawnedEnemyThisLevel: 0
 --- !u!4 &1558961850
 Transform:
   m_ObjectHideFlags: 0
@@ -391,6 +392,8 @@ GameObject:
   - component: {fileID: 2025225185}
   - component: {fileID: 2025225184}
   - component: {fileID: 2025225183}
+  - component: {fileID: 2025225186}
+  - component: {fileID: 2025225187}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -413,7 +416,7 @@ MonoBehaviour:
   _spawnManager: {fileID: 1558961849}
   _speed: 5.5
   _verticalStartPosition: -4
-  _laserPrefab: {fileID: 4184006939128046684, guid: 6c0db486e0162d64da9d22a474e29da2,
+  _laserPrefab: {fileID: 2129202483965659543, guid: 6c0db486e0162d64da9d22a474e29da2,
     type: 3}
   _laserYOffset: 0.5
   _fireDelay: 0.2
@@ -476,12 +479,59 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2025225182}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &2025225186
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025225182}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.07168257, y: -0.25088286}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 5.12, y: 5.12}
+    newSize: {x: 5.12, y: 5.12}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3.3996656, y: 4.618234}
+  m_EdgeRadius: 0
+--- !u!50 &2025225187
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2025225182}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &2115894220
 GameObject:
   m_ObjectHideFlags: 0

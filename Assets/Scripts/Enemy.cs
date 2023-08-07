@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
         CalculateMovement();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         bool destroyed = false;
         if (other.transform.CompareTag("Player"))
