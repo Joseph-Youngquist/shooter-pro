@@ -61,6 +61,7 @@ public class Enemy : MonoBehaviour
     }
     public void ResetEnemy()
     {
+        // Resets the recyled enemy object
         PickRandomHorizontalPosition();
         this.gameObject.SetActive(true);
     }
