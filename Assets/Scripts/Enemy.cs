@@ -89,7 +89,7 @@ public class Enemy : MonoBehaviour
     {
         float randomXPosition = Random.Range(_leftMinX, Mathf.Abs(_leftMinX));
         transform.position = new Vector3(randomXPosition, _topMaxY + _offsetPositionY, 0f);
-        Debug.Log("Enemy position: " + transform.position.ToString());
+         
     }
 
     void CalculateMovement()
