@@ -35,7 +35,10 @@ public class SpawnManager : MonoBehaviour
     private float _levelClearedTime; // Time the player takes to clear the level
     private float _levelStartTime; // Time this level started so we can calculate time taken to clear level
 
+    [SerializeField]
     private int _spawnedEnemyThisLevel = 0;
+
+    private List<GameObject> _poolOfEnemies = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -53,16 +56,9 @@ public class SpawnManager : MonoBehaviour
         StartNewEnemyWave(_level); // start level 1
         
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void calculateTimeTakenToClearLevel()
     {
         _levelClearedTime = Time.time - _levelStartTime;
-        Debug.Log("Level Cleared in: " + _levelClearedTime + " seconds.");
     }
     private void StartNewEnemyWave(int currentLevel)
     {
@@ -73,23 +69,23 @@ public class SpawnManager : MonoBehaviour
 
         _maximumEnemiesThisLevel = CalculateMaxEnemies(currentLevel);
         
-        Debug.Log(
-            "New Wave Started! Current Level: "
-            + currentLevel + ". With " + _maximumEnemiesThisLevel
-            + " to destroy!"
-        );
         StartCoroutine(SpawnEnemies());
 
     }
-    public void EnemyDestroyed()
+    public void EnemyDestroyed(GameObject theEnemyDestroyed)
     {
         _enemiesDestroyedThisLevel++;
+
+        // TODO: We'll need to implement this a little differently later once we
+        // add in blowing up animations >)
+
+        theEnemyDestroyed.SetActive(false);
+        _poolOfEnemies.Add(theEnemyDestroyed);
 
         if(_enemiesDestroyedThisLevel >= _maximumEnemiesThisLevel)
         {
             WaveCleared();
         }
-        Debug.Log("Enemies Destroyed This Level: " + _enemiesDestroyedThisLevel);
     }
     private void WaveCleared()
     {
@@ -98,7 +94,6 @@ public class SpawnManager : MonoBehaviour
         // calculate the next wave enemy maximum.
         StopAllCoroutines();
         _spawnAllowed = false;
-        Debug.Log("Wave Cleared!");
         calculateTimeTakenToClearLevel();
         StartNewEnemyWave(_level++);
     }
@@ -122,20 +117,35 @@ public class SpawnManager : MonoBehaviour
     {
         while(_spawnAllowed)
         {
-            // TODO: need to use an object pool to pull from or make a new enemy instance.
-            Debug.Log("Spawning a new Enemy.");
-            GameObject newEnemy = Instantiate(_enemyPrefab);
-            newEnemy.transform.SetParent(_enemyContainer.transform);
+            GetOrMakeEnemy();
             _spawnedEnemyThisLevel++;
+
+            _spawnAllowed = _spawnedEnemyThisLevel < _maximumEnemiesThisLevel;
 
             float timeToWait = Random.Range(_minimumSpawnDelayInSeconds, _maximumSpawnDelayInSeconds);
             // Don't count the time we wait as part of the time taken to clear the level.
             _levelStartTime -= timeToWait;
             yield return new WaitForSeconds(timeToWait);
         }
-        Debug.Log("SpawnEnemies stopped.");
     }
 
+    private void GetOrMakeEnemy()
+    {
+        // Check pool and if there is an inactive enemy reuse it
+        // if there isn't an available reuseable enemy then make a new one.
+        if (_poolOfEnemies.Count > 0)
+        {
+            int _lastIndex = _poolOfEnemies.Count - 1;
+            GameObject newEnemy = _poolOfEnemies[ _lastIndex ];
+            _poolOfEnemies.RemoveAt(_lastIndex);
+            Enemy enemy = newEnemy.GetComponent<Enemy>();
+            enemy.ResetEnemy();  // sets new randomX and activates object.
+        } else
+        {
+            GameObject newEnemy = Instantiate(_enemyPrefab);
+            newEnemy.transform.SetParent(_enemyContainer.transform);
+        }
+    }
     public void OnPlayerDeath()
     {
         _spawnAllowed = false;
