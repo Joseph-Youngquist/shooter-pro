@@ -59,7 +59,11 @@ public class Enemy : MonoBehaviour
     {
         CalculateMovement();
     }
-
+    public void ResetEnemy()
+    {
+        PickRandomHorizontalPosition();
+        this.gameObject.SetActive(true);
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         bool destroyed = false;
@@ -76,15 +80,15 @@ public class Enemy : MonoBehaviour
 
         if (destroyed)
         {
-            // TODO: Need to add this to an object pool so this enemy can be re-used.
-            Destroy(this.gameObject);
-            _spawnManager.EnemyDestroyed();
+            this.gameObject.SetActive(false);
+            _spawnManager.EnemyDestroyed(this.gameObject);
         }
     }
     void PickRandomHorizontalPosition()
     {
         float randomXPosition = Random.Range(_leftMinX, Mathf.Abs(_leftMinX));
         transform.position = new Vector3(randomXPosition, _topMaxY + _offsetPositionY, 0f);
+        Debug.Log("Enemy position: " + transform.position.ToString());
     }
 
     void CalculateMovement()
