@@ -40,6 +40,10 @@ public class SpawnManager : MonoBehaviour
 
     private List<GameObject> _poolOfEnemies = new List<GameObject>();
 
+    // used to set horizontal bounds for player and enemies
+    private float _screenHalfWidth;
+    private float _cameraX;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,9 +57,23 @@ public class SpawnManager : MonoBehaviour
             Debug.LogError("SpawnManager::Start() - Enemy Container is NULL.");
         }
 
+        // Get the width of the game window to calculate the left and right edges
+        _screenHalfWidth = Camera.main.aspect * Camera.main.orthographicSize;
+        // Need to take into account if the camera isn't in the center as it is right now...
+        _cameraX = Camera.main.transform.position.x;
+
         StartNewEnemyWave(_level); // start level 1
         
     }
+    public float GetScreenHalfWidth()
+    {
+        return _screenHalfWidth;
+    }
+    public float GetCameraX()
+    {
+        return _cameraX;
+    }
+
     private void calculateTimeTakenToClearLevel()
     {
         _levelClearedTime = Time.time - _levelStartTime;
