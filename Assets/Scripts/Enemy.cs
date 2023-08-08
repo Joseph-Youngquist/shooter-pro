@@ -63,9 +63,10 @@ public class Enemy : MonoBehaviour
     {
         Vector3 point = _camera.ScreenToWorldPoint(new Vector3(0f, Screen.height, _camera.transform.position.z));
         float enemyScaleX = transform.localScale.x - _enemyScaleFactorAdjustment;
-        float enemyHalfWidth = transform.GetComponent<SpriteRenderer>().bounds.size.x * enemyScaleX;
-        Debug.Log("Enemy Half Width: " + enemyHalfWidth);
-        _leftMinX = -point.x - enemyHalfWidth;
+        float enemyHalfWidth = transform.GetComponent<BoxCollider2D>().size.x * enemyScaleX;
+        Debug.Log("enemyScaleX: " + enemyScaleX);
+        Debug.Log("-point.x: " + -point.x);
+        _leftMinX = -point.x + enemyHalfWidth;
         _topMaxY = -point.y;
         _offscreenY = -(_topMaxY + transform.localScale.y);
 
