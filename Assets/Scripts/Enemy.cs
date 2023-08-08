@@ -12,6 +12,8 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private float _offsetPositionY = 2f;
     [SerializeField]
+    private float _enemyScaleFactorAdjustment = 0.03f;
+    [SerializeField]
     private SpawnManager _spawnManager;
 
     private float _leftMinX;
@@ -46,11 +48,8 @@ public class Enemy : MonoBehaviour
 
         }
 
-        Vector3 point = _camera.ScreenToWorldPoint(new Vector3(0f, Screen.height, _camera.transform.position.z));
-        _leftMinX = -1 * point.x;
-        _topMaxY = -1 * point.y;
-        _offscreenY = (_topMaxY + transform.localScale.y) * -1;
-
+        CalculateMovementBounds();
+        
         PickRandomHorizontalPosition();
     }
 
@@ -58,6 +57,21 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         CalculateMovement();
+    }
+
+    private void CalculateMovementBounds()
+    {
+        Vector3 point = _camera.ScreenToWorldPoint(new Vector3(0f, Screen.height, _camera.transform.position.z));
+        float enemyScaleX = transform.localScale.x - _enemyScaleFactorAdjustment;
+        float enemyHalfWidth = transform.GetComponent<BoxCollider2D>().size.x * enemyScaleX;
+        Debug.Log("enemyScaleX: " + enemyScaleX);
+        Debug.Log("-point.x: " + -point.x);
+        _leftMinX = -point.x + enemyHalfWidth;
+        _topMaxY = -point.y;
+        _offscreenY = -(_topMaxY + transform.localScale.y);
+
+        Debug.Log("Enemy Screen Bounds on the X are " + _leftMinX + ":" + (Mathf.Abs(_leftMinX)));
+        Debug.Log("Enemy Screen Bounds on the Y are " + _topMaxY + ":" + _offscreenY);
     }
     public void ResetEnemy()
     {

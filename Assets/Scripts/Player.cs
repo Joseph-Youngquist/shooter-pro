@@ -13,8 +13,9 @@ public class Player : MonoBehaviour
     private float _speed = 5.5f; // initial player speed
 
     [SerializeField]
-    private float _verticalStartPosition = -4.0f;
-
+    private float _verticalStartPosition = -3.8f;
+    [SerializeField]
+    private float _playerScaleFactorAdjustment = 0.05f;
     [SerializeField]
     private GameObject _laserPrefab;
 
@@ -44,6 +45,7 @@ public class Player : MonoBehaviour
             Debug.LogError("Player::Start() - SpawnManager is NULL.");
         }
 
+        CalculatePlayerMovementBounds();
     }
 
     // Update is called once per frame
@@ -56,6 +58,26 @@ public class Player : MonoBehaviour
             _nextFireAt = Time.time + _fireDelay;
             FireLaser();
         }
+    }
+    private void CalculatePlayerMovementBounds()
+    {
+        // Get the width of the game window to calculate the left and right edges
+        float screenHalfWidth = _spawnManager.GetScreenHalfWidth();
+
+        // Need to take into account if the camera isn't in the center as it is right now...
+        float cameraX = _spawnManager.GetCameraX();
+        /*
+         *  And we need to account for the width of the player's ship. 
+         * We'll use the SpriteRender to get the size.x and we'll multiply
+         * it by the player's slightly smaller scale.x value so we keep the
+         * player completely in bounds of the game window.
+         */
+        float playerScaleX = transform.localScale.x - _playerScaleFactorAdjustment;
+        float playerHalfWidth = transform.GetComponent<SpriteRenderer>().bounds.size.x * playerScaleX;
+        _leftEdgeOfScreen = cameraX - screenHalfWidth - playerHalfWidth;
+        _rightEdgeOfScreen = cameraX + screenHalfWidth + playerHalfWidth;
+
+        Debug.Log("Screen Bounds on the X: " + _leftEdgeOfScreen + ":" + _rightEdgeOfScreen);
     }
 
     public void AddScore(int points)
