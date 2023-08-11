@@ -7,9 +7,6 @@ public class PowerUps : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 4.0f;
-
-    [SerializeField]
-    private Player _player;
     
     private SpawnManager _spawnManager;
 
@@ -19,10 +16,7 @@ public class PowerUps : MonoBehaviour
     void Start()
     {
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        _player = GameObject.Find("Player").GetComponent<Player>();
-
-        Debug.Log("PowerUp Made!");
-
+        
     }
 
     // Update is called once per frame
@@ -35,10 +29,10 @@ public class PowerUps : MonoBehaviour
     {
         if (other.transform.tag == "Player")
         {
+            Player _player = other.GetComponent<Player>();
             _player.CollectPowerUp(0);
             Destroy(this.gameObject);
         }
-        Debug.Log("Hit: " + other.transform.tag);
     }
 
     private void CalculateMovement()
