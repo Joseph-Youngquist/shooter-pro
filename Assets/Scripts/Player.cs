@@ -127,7 +127,6 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(durration);
         _isTrippleShotActive = false;
-        StopCoroutine(PowerUpTimer(0));
     }
 
     void GetOrMakeLaser()
