@@ -83,17 +83,8 @@ public class Enemy : MonoBehaviour
             destroyed = true;
         } else if (other.transform.CompareTag("Laser"))
         {
-            Transform laserParent = other.transform.parent;
-
             _player.AddScore(_enemyScoreValue);
-
-            if (laserParent)
-            {
-                Destroy(laserParent.gameObject);
-            } else
-            {
-                Destroy(other.gameObject);
-            }
+            Destroy(other.gameObject);
             destroyed = true;
         }
 

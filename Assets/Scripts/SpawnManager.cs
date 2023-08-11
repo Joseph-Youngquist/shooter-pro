@@ -20,7 +20,12 @@ public class SpawnManager : MonoBehaviour
     private GameObject _enemyPrefab;
 
     [SerializeField]
-    private Array _powerUpPrefabs;
+    private GameObject _trippleShotPowerUpPrefab;
+
+    [SerializeField]
+    private float _minimumPowerUpTimeLimit = 3.0f;
+    [SerializeField]
+    private float _maximumPowerUpTimeLimit = 7.0f;
 
     [SerializeField]
     private float _minimumSpawnDelayInSeconds = 0.5f;
@@ -49,10 +54,19 @@ public class SpawnManager : MonoBehaviour
     private float _cameraX;
 
     private Vector3 _cameraScreenToWorldPoint;
+    [SerializeField]
+    private GameObject _powerupContainer;
+
+    private bool _gameOver = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        if ( _powerupContainer == null )
+        {
+            Debug.LogError("SpawnManager::Start() - PowerupContainer is NULL.");
+        }
+
         if(_enemyPrefab == null)
         {
             Debug.LogError("SpawnManager::Start() - Enemy Prefab is NULL.");
@@ -71,6 +85,8 @@ public class SpawnManager : MonoBehaviour
 
         StartNewEnemyWave(_level); // start level 1
         Debug.Log("Screen Bounds: " + _cameraScreenToWorldPoint.ToString());
+
+        StartCoroutine(SpawnPowerups());
         
     }
     public Vector3 GetPoint()
@@ -122,7 +138,6 @@ public class SpawnManager : MonoBehaviour
         // stop the SpawnEnemies Coroutine.
         // get the time taken to clear this level.
         // calculate the next wave enemy maximum.
-        StopAllCoroutines();
         _spawnAllowed = false;
         calculateTimeTakenToClearLevel();
         StartNewEnemyWave(_level++);
@@ -159,6 +174,21 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+    IEnumerator SpawnPowerups()
+    {
+        while (!_gameOver)
+        {
+            yield return new WaitForSeconds(UnityEngine.Random.Range(_minimumPowerUpTimeLimit, _maximumPowerUpTimeLimit));
+            float minLeft = -_cameraScreenToWorldPoint.x + 1.5f; // keep power up fully on screen
+            float maxRight = _cameraScreenToWorldPoint.x - 1.5f; // ""
+            float top = 7.5f; //_cameraScreenToWorldPoint.y + 4f; // spawn fully above screen
+
+            Vector3 randomPosition = new Vector3(UnityEngine.Random.Range(minLeft, maxRight), top, 0f);
+            GameObject powerup = Instantiate(_trippleShotPowerUpPrefab, randomPosition, Quaternion.identity);
+            powerup.transform.SetParent(_powerupContainer.transform);
+        }
+    }
+
     private void GetOrMakeEnemy()
     {
         // Check pool and if there is an inactive enemy reuse it
@@ -179,6 +209,7 @@ public class SpawnManager : MonoBehaviour
     public void OnPlayerDeath()
     {
         _spawnAllowed = false;
+        _gameOver = true;
     }
 
     public void GameOver(bool status)

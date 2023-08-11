@@ -7,16 +7,14 @@ public class PowerUps : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 4.0f;
-    
-    private SpawnManager _spawnManager;
 
-    private float _bottomOfScreen;
+    [SerializeField]
+    private float _bottomOfScreen = -7f;
 
     // Start is called before the first frame update
     void Start()
     {
-        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        
+
     }
 
     // Update is called once per frame
@@ -44,9 +42,9 @@ public class PowerUps : MonoBehaviour
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
-        //if(transform.position.y < _bottomOfScreen)
-        //{
-          //  Destroy(this.gameObject);
-        //}
+        if(transform.position.y < _bottomOfScreen)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
