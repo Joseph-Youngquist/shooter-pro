@@ -37,19 +37,13 @@ public class Laser : MonoBehaviour
             return;
         }
 
-        // if this laser is part of the tripple shot power up then
-        // we need to add the tripple shot to the tripple shot pool
-        // else we need to add to the laser pool.
-        Transform laserParent = transform.parent;
-
-        if (laserParent == null)
+        if (transform.parent != null)
         {
-            gameObject.SetActive(false);
-            Destroy(this.gameObject);
+            Destroy(transform.parent.gameObject); 
+            
         } else
         {
-            laserParent.gameObject.SetActive(false);
-            Destroy(laserParent.gameObject);
+            Destroy(this.gameObject);
         }
         
         
