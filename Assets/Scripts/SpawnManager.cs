@@ -54,19 +54,12 @@ public class SpawnManager : MonoBehaviour
     private float _cameraX;
 
     private Vector3 _cameraScreenToWorldPoint;
-    [SerializeField]
-    private GameObject _powerupContainer;
 
     private bool _gameOver = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        if ( _powerupContainer == null )
-        {
-            Debug.LogError("SpawnManager::Start() - PowerupContainer is NULL.");
-        }
-
         if(_enemyPrefab == null)
         {
             Debug.LogError("SpawnManager::Start() - Enemy Prefab is NULL.");
@@ -185,7 +178,6 @@ public class SpawnManager : MonoBehaviour
 
             Vector3 randomPosition = new Vector3(UnityEngine.Random.Range(minLeft, maxRight), top, 0f);
             GameObject powerup = Instantiate(_trippleShotPowerUpPrefab, randomPosition, Quaternion.identity);
-            powerup.transform.SetParent(_powerupContainer.transform);
         }
     }
 
