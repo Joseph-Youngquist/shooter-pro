@@ -38,6 +38,8 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private bool _isTrippleShotActive = false;
+    [SerializeField]
+    private float _trippleShotDuration = 3f;
 
     // Start is called before the first frame update
     void Start()
@@ -106,9 +108,26 @@ public class Player : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+    
+    public void CollectPowerUp(int powerupID)
+    {
+        Debug.Log("Player Collected a power up, id: " + powerupID);
+        if (powerupID == 0)
+        {
+            _isTrippleShotActive = true;
+            StartCoroutine(PowerUpTimer(_trippleShotDuration));
+        }
+    }
     void FireLaser()
     {
         GetOrMakeLaser();
+    }
+
+    IEnumerator PowerUpTimer(float durration)
+    {
+        yield return new WaitForSeconds(durration);
+        _isTrippleShotActive = false;
+        StopCoroutine(PowerUpTimer(0));
     }
 
     void GetOrMakeLaser()
