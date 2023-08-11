@@ -29,8 +29,13 @@ public class PowerUps : MonoBehaviour
     {
         if (other.transform.tag == "Player")
         {
-            Player _player = other.GetComponent<Player>();
-            _player.CollectPowerUp(0);
+            Player player = other.GetComponent<Player>();
+
+            if (player != null)
+            {
+                player.CollectPowerUp(0);
+            }
+
             Destroy(this.gameObject);
         }
     }
