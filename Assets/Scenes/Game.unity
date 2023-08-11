@@ -419,9 +419,12 @@ MonoBehaviour:
   _playerScaleFactorAdjustment: 0.05
   _laserPrefab: {fileID: 2129202483965659543, guid: 6c0db486e0162d64da9d22a474e29da2,
     type: 3}
+  _trippleShotPreFab: {fileID: 696484316982438880, guid: f91849cba1426004c97518225c037b84,
+    type: 3}
   _laserYOffset: 0.5
   _fireDelay: 0.2
   _lives: 3
+  _isTrippleShotActive: 0
 --- !u!212 &2025225184
 SpriteRenderer:
   m_ObjectHideFlags: 0

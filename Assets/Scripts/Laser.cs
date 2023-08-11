@@ -34,10 +34,24 @@ public class Laser : MonoBehaviour
         if (transform.position.y < _maxYPosition)
         {
             transform.Translate(Vector3.up * _speed * Time.deltaTime);
-        } else
+            return;
+        }
+
+        // if this laser is part of the tripple shot power up then
+        // we need to add the tripple shot to the tripple shot pool
+        // else we need to add to the laser pool.
+        Transform laserParent = transform.parent;
+
+        if (laserParent == null)
         {
             gameObject.SetActive(false);
-            _player.AddLaserToPool(gameObject);
+            Destroy(this.gameObject);
+        } else
+        {
+            laserParent.gameObject.SetActive(false);
+            Destroy(laserParent.gameObject);
         }
+        
+        
     }
 }

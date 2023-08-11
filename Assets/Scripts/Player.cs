@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class Player : MonoBehaviour
     private float _playerScaleFactorAdjustment = 0.05f;
     [SerializeField]
     private GameObject _laserPrefab;
+    [SerializeField]
+    private GameObject _trippleShotPreFab;
 
     private float _leftEdgeOfScreen = -9.2f;
     private float _rightEdgeOfScreen = 9.2f;
@@ -33,7 +36,8 @@ public class Player : MonoBehaviour
     private int _lives = 3;
     private int _score = 0;
 
-    private List<GameObject> _availableLasers = new List<GameObject>();
+    [SerializeField]
+    private bool _isTrippleShotActive = false;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +46,17 @@ public class Player : MonoBehaviour
 
         if(_spawnManager == null)
         {
-            Debug.LogError("Player::Start() - SpawnManager is NULL.");
+            Debug.LogError("Player::Start() - SpawnManager is null.");
+        }
+
+        if (_laserPrefab == null)
+        {
+            Debug.LogError("Player::Start() - LaserPreFab is null.");
+        }
+
+        if ( _trippleShotPreFab == null)
+        {
+            Debug.LogError("Player::Start() - TrippleShotPreFab is null.");
         }
 
         CalculatePlayerMovementBounds();
@@ -76,8 +90,6 @@ public class Player : MonoBehaviour
         float playerHalfWidth = transform.GetComponent<SpriteRenderer>().bounds.size.x * playerScaleX;
         _leftEdgeOfScreen = cameraX - screenHalfWidth - playerHalfWidth;
         _rightEdgeOfScreen = cameraX + screenHalfWidth + playerHalfWidth;
-
-        Debug.Log("Screen Bounds on the X: " + _leftEdgeOfScreen + ":" + _rightEdgeOfScreen);
     }
 
     public void AddScore(int points)
@@ -101,25 +113,21 @@ public class Player : MonoBehaviour
 
     void GetOrMakeLaser()
     {
-        Vector3 laserPosition = transform.position + new Vector3(0f, _laserYOffset, 0f);
 
-        if (_availableLasers.Count > 0)
+        Vector3 laserPosition;
+        GameObject prefabToUse;
+        
+        if (_isTrippleShotActive)
         {
-            int lastIndex = _availableLasers.Count - 1;
-            GameObject laser = _availableLasers[lastIndex];
-            _availableLasers.RemoveAt(lastIndex);
-            laser.transform.position = laserPosition;
-            laser.SetActive(true);
-        }
-        else
+            prefabToUse = _trippleShotPreFab;
+            laserPosition = transform.position;
+        } else
         {
-            Instantiate(_laserPrefab, laserPosition, Quaternion.identity);
+            prefabToUse = _laserPrefab;
+            laserPosition = transform.position + new Vector3(0f, _laserYOffset, 0f);
         }
 
-    }
-    public void AddLaserToPool(GameObject laser)
-    {
-        _availableLasers.Add(laser);
+        Instantiate(prefabToUse, laserPosition, Quaternion.identity);
     }
     void CalculatePlayerMovement()
     {
