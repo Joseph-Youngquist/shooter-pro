@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4874099264434613139}
   - component: {fileID: 1709907063741315580}
   - component: {fileID: 6085322895676316509}
-  - component: {fileID: 3549860078039183982}
+  - component: {fileID: 2109712572}
   m_Layer: 0
   m_Name: TrippleShot
   m_TagString: PowerUp
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 4
---- !u!95 &3549860078039183982
+--- !u!95 &2109712572
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
