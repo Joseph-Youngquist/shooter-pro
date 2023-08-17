@@ -1830,7 +1830,7 @@ MonoBehaviour:
   _difficultyScalingFactor: 1
   _baseEnemies: 10
   _enemiesPerLevel: 2
-  _enemyPrefab: {fileID: 766688267943856844, guid: a7fb9e671d868054daecbca00fb12496,
+  _enemyPrefab: {fileID: 9185382400370379188, guid: 6851073ae908c1043bc75d6713505b1d,
     type: 3}
   _trippleShotPowerUpPrefab: {fileID: 1899110084303961874, guid: a50b22d71e3e22b4da7b0689b65dd714,
     type: 3}
@@ -2043,7 +2043,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1851550324
 Transform:
   m_ObjectHideFlags: 0
