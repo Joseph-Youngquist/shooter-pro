@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -15,15 +16,13 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private float _verticalStartPosition = -3.8f;
-    [SerializeField]
-    private float _playerScaleFactorAdjustment = 0.05f;
+
     [SerializeField]
     private GameObject _laserPrefab;
     [SerializeField]
     private GameObject _trippleShotPreFab;
 
-    private float _leftEdgeOfScreen = -9.2f;
-    private float _rightEdgeOfScreen = 9.2f;
+    private float _rightEdgeOfScreen;
 
     [SerializeField]
     private float _laserYOffset = 0.5f;
@@ -40,6 +39,10 @@ public class Player : MonoBehaviour
     private bool _isTrippleShotActive = false;
     [SerializeField]
     private float _trippleShotDuration = 3f;
+
+    private int _totalShotsFired = 0;
+    private int _totalKills = 0;
+    private float _shotAccuracy = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -72,32 +75,42 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _nextFireAt) 
         {
             _nextFireAt = Time.time + _fireDelay;
-            FireLaser();
+            Shoot();
         }
+    }
+
+    private void OnGUI()
+    {
+        GUILayout.BeginArea(new Rect(20, 20, 250, 120));
+        GUILayout.Label($"Score: {_score}");
+        GUILayout.Label($"Lives: {_lives}");
+        GUILayout.Label($"Shots Fired: {_totalShotsFired}");
+        GUILayout.Label($"Total Kills: {_totalKills}");
+        GUILayout.Label($"Accuracy: {_shotAccuracy.ToString("F2")}%");
+        GUILayout.EndArea();
     }
     private void CalculatePlayerMovementBounds()
     {
         // Get the width of the game window to calculate the left and right edges
-        float screenHalfWidth = _spawnManager.GetScreenHalfWidth();
-
-        // Need to take into account if the camera isn't in the center as it is right now...
-        float cameraX = _spawnManager.GetCameraX();
+        Vector3 screenSize = Camera.main
+            .ScreenToWorldPoint(
+                new Vector3(0f, Screen.height, Camera.main.transform.position.z)
+            );
         /*
-         *  And we need to account for the width of the player's ship. 
-         * We'll use the SpriteRender to get the size.x and we'll multiply
-         * it by the player's slightly smaller scale.x value so we keep the
-         * player completely in bounds of the game window.
+         *  We want to limit the player's ship to stay on the screen at all times.
+         *  To do this we get the screenSize and subtract off the player's bound x / 2
          */
-        float playerScaleX = transform.localScale.x - _playerScaleFactorAdjustment;
-        float playerHalfWidth = transform.GetComponent<SpriteRenderer>().bounds.size.x * playerScaleX;
-        _leftEdgeOfScreen = cameraX - screenHalfWidth - playerHalfWidth;
-        _rightEdgeOfScreen = cameraX + screenHalfWidth + playerHalfWidth;
+        float playerBoundsX = transform.GetComponent<BoxCollider2D>().bounds.size.x;
+        // we'll just use the negative of this for the left side of the screen
+        _rightEdgeOfScreen = screenSize.x - playerBoundsX / 2;
+
     }
 
     public void AddScore(int points)
     {
+        _totalKills++;
+        _shotAccuracy = (float)_totalKills / _totalShotsFired * 100;
         _score += points;
-        Debug.Log("Player's Score: " + _score);
     }
     public void Hit()
     {
@@ -111,16 +124,19 @@ public class Player : MonoBehaviour
     
     public void CollectPowerUp(int powerupID)
     {
-        Debug.Log("Player Collected a power up, id: " + powerupID);
         if (powerupID == 0)
         {
             _isTrippleShotActive = true;
             StartCoroutine(PowerUpTimer(_trippleShotDuration));
+        } else if (powerupID == 1)
+        {
+            Debug.Log("Collected " + powerupID);
         }
     }
-    void FireLaser()
+    void Shoot()
     {
-        GetOrMakeLaser();
+        _totalShotsFired++;
+        FireWeapons();
     }
 
     IEnumerator PowerUpTimer(float durration)
@@ -129,7 +145,7 @@ public class Player : MonoBehaviour
         _isTrippleShotActive = false;
     }
 
-    void GetOrMakeLaser()
+    void FireWeapons()
     {
 
         Vector3 laserPosition;
@@ -154,7 +170,7 @@ public class Player : MonoBehaviour
         transform.Translate(newDirection * _speed * Time.deltaTime);
 
         float currentXPosition = transform.position.x;
-        float newPositionX = Mathf.Clamp(currentXPosition, _leftEdgeOfScreen, _rightEdgeOfScreen);
+        float newPositionX = Mathf.Clamp(currentXPosition, -_rightEdgeOfScreen, _rightEdgeOfScreen);
         transform.position = new Vector3(newPositionX, _verticalStartPosition, 0);
 
     }

@@ -11,6 +11,9 @@ public class PowerUps : MonoBehaviour
     [SerializeField]
     private float _bottomOfScreen = -7f;
 
+    [SerializeField]
+    private int _powerupID;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,7 +34,7 @@ public class PowerUps : MonoBehaviour
 
             if (player != null)
             {
-                player.CollectPowerUp(0);
+                player.CollectPowerUp(_powerupID);
             }
 
             Destroy(this.gameObject);
