@@ -34,10 +34,21 @@ public class Laser : MonoBehaviour
         if (transform.position.y < _maxYPosition)
         {
             transform.Translate(Vector3.up * _speed * Time.deltaTime);
-        } else
+            return;
+        }
+
+        CallDestroy();
+    }
+
+    private void CallDestroy()
+    {
+        if (transform.parent != null)
         {
-            gameObject.SetActive(false);
-            _player.AddLaserToPool(gameObject);
+            Destroy(transform.parent.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
         }
     }
 }

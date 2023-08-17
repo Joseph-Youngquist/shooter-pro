@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,7 +18,15 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField]
     private GameObject _enemyPrefab;
-    
+
+    [SerializeField]
+    private GameObject _trippleShotPowerUpPrefab;
+
+    [SerializeField]
+    private float _minimumPowerUpTimeLimit = 3.0f;
+    [SerializeField]
+    private float _maximumPowerUpTimeLimit = 7.0f;
+
     [SerializeField]
     private float _minimumSpawnDelayInSeconds = 0.5f;
     
@@ -44,6 +53,10 @@ public class SpawnManager : MonoBehaviour
     private float _screenHalfWidth;
     private float _cameraX;
 
+    private Vector3 _cameraScreenToWorldPoint;
+
+    private bool _gameOver = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,13 +70,21 @@ public class SpawnManager : MonoBehaviour
             Debug.LogError("SpawnManager::Start() - Enemy Container is NULL.");
         }
 
+        _cameraScreenToWorldPoint = Camera.main.ScreenToWorldPoint(new Vector3(0f, Screen.height, Camera.main.transform.position.z));
         // Get the width of the game window to calculate the left and right edges
         _screenHalfWidth = Camera.main.aspect * Camera.main.orthographicSize;
         // Need to take into account if the camera isn't in the center as it is right now...
         _cameraX = Camera.main.transform.position.x;
 
         StartNewEnemyWave(_level); // start level 1
+        Debug.Log("Screen Bounds: " + _cameraScreenToWorldPoint.ToString());
+
+        StartCoroutine(SpawnPowerups());
         
+    }
+    public Vector3 GetPoint()
+    {
+        return _cameraScreenToWorldPoint;
     }
     public float GetScreenHalfWidth()
     {
@@ -110,7 +131,6 @@ public class SpawnManager : MonoBehaviour
         // stop the SpawnEnemies Coroutine.
         // get the time taken to clear this level.
         // calculate the next wave enemy maximum.
-        StopAllCoroutines();
         _spawnAllowed = false;
         calculateTimeTakenToClearLevel();
         StartNewEnemyWave(_level++);
@@ -140,10 +160,24 @@ public class SpawnManager : MonoBehaviour
 
             _spawnAllowed = _spawnedEnemyThisLevel < _maximumEnemiesThisLevel;
 
-            float timeToWait = Random.Range(_minimumSpawnDelayInSeconds, _maximumSpawnDelayInSeconds);
+            float timeToWait = UnityEngine.Random.Range(_minimumSpawnDelayInSeconds, _maximumSpawnDelayInSeconds);
             // Don't count the time we wait as part of the time taken to clear the level.
             _levelStartTime -= timeToWait;
             yield return new WaitForSeconds(timeToWait);
+        }
+    }
+
+    IEnumerator SpawnPowerups()
+    {
+        while (!_gameOver)
+        {
+            yield return new WaitForSeconds(UnityEngine.Random.Range(_minimumPowerUpTimeLimit, _maximumPowerUpTimeLimit));
+            float minLeft = -_cameraScreenToWorldPoint.x + 1.5f; // keep power up fully on screen
+            float maxRight = _cameraScreenToWorldPoint.x - 1.5f; // ""
+            float top = 7.5f; //_cameraScreenToWorldPoint.y + 4f; // spawn fully above screen
+
+            Vector3 randomPosition = new Vector3(UnityEngine.Random.Range(minLeft, maxRight), top, 0f);
+            GameObject powerup = Instantiate(_trippleShotPowerUpPrefab, randomPosition, Quaternion.identity);
         }
     }
 
@@ -167,6 +201,7 @@ public class SpawnManager : MonoBehaviour
     public void OnPlayerDeath()
     {
         _spawnAllowed = false;
+        _gameOver = true;
     }
 
     public void GameOver(bool status)
