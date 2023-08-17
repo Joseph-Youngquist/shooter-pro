@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     private float _offsetPositionY = 2f;
     [SerializeField]
     private float _enemyScaleFactorAdjustment = 0.03f;
-    [SerializeField]
+
     private SpawnManager _spawnManager;
 
     private float _leftMinX;
