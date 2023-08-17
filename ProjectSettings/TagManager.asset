@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Enemy
   - Laser
+  - PowerUp
+  - Shields
+  - Projectile
+  - Asteroid
   layers:
   - Default
   - TransparentFX

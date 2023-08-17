@@ -61,7 +61,7 @@ public class Enemy : MonoBehaviour
 
     private void CalculateMovementBounds()
     {
-        Vector3 point = _camera.ScreenToWorldPoint(new Vector3(0f, Screen.height, _camera.transform.position.z));
+        Vector3 point = _spawnManager.GetPoint();
         float enemyScaleX = transform.localScale.x - _enemyScaleFactorAdjustment;
         float enemyHalfWidth = transform.GetComponent<BoxCollider2D>().size.x * enemyScaleX;
         _leftMinX = -point.x + enemyHalfWidth;
