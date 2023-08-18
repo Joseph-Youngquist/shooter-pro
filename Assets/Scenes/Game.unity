@@ -137,7 +137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &96263997
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1690,7 +1690,6 @@ MonoBehaviour:
   _spawnManager: {fileID: 1558961849}
   _speed: 5.5
   _verticalStartPosition: -3.8
-  _playerScaleFactorAdjustment: 0.05
   _laserPrefab: {fileID: 2129202483965659543, guid: 5342ff4fc50823242960ccb504504915,
     type: 3}
   _trippleShotPreFab: {fileID: 696484316982438880, guid: 75d85d4f4d17e8f4aa9077914f9540a4,
@@ -1698,6 +1697,9 @@ MonoBehaviour:
   _laserYOffset: 0.5
   _fireDelay: 0.2
   _lives: 3
+  _enginesContainerIndex: 0
+  _shieldsContainerIndex: 1
+  _weaponsContainerIndex: 2
   _isTrippleShotActive: 0
   _trippleShotDuration: 3
 --- !u!212 &1557382740
@@ -1758,7 +1760,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1557382736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -9.85, y: -4.82, z: 0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_Children:
   - {fileID: 1769807847}
@@ -1802,8 +1804,9 @@ MonoBehaviour:
   _enemiesPerLevel: 2
   _enemyPrefab: {fileID: 9185382400370379188, guid: 6851073ae908c1043bc75d6713505b1d,
     type: 3}
-  _trippleShotPowerUpPrefab: {fileID: 1899110084303961874, guid: a50b22d71e3e22b4da7b0689b65dd714,
-    type: 3}
+  _powerUpPrefabs:
+  - {fileID: 1899110084303961874, guid: a50b22d71e3e22b4da7b0689b65dd714, type: 3}
+  - {fileID: 3014782416100621179, guid: 4a6e542a29fc0b34fa2fc22eee5803fa, type: 3}
   _minimumPowerUpTimeLimit: 3
   _maximumPowerUpTimeLimit: 7
   _minimumSpawnDelayInSeconds: 0.5
@@ -2132,7 +2135,6 @@ MonoBehaviour:
   _spawnManager: {fileID: 1558961849}
   _speed: 5.5
   _verticalStartPosition: -3.8
-  _playerScaleFactorAdjustment: 0.05
   _laserPrefab: {fileID: 2129202483965659543, guid: 5342ff4fc50823242960ccb504504915,
     type: 3}
   _trippleShotPreFab: {fileID: 696484316982438880, guid: 75d85d4f4d17e8f4aa9077914f9540a4,
@@ -2140,6 +2142,9 @@ MonoBehaviour:
   _laserYOffset: 0.5
   _fireDelay: 0.2
   _lives: 3
+  _enginesContainerIndex: 0
+  _shieldsContainerIndex: 1
+  _weaponsContainerIndex: 2
   _isTrippleShotActive: 0
   _trippleShotDuration: 3
 --- !u!212 &2025225184

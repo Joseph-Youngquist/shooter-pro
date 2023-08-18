@@ -20,7 +20,7 @@ public class SpawnManager : MonoBehaviour
     private GameObject _enemyPrefab;
 
     [SerializeField]
-    private GameObject _trippleShotPowerUpPrefab;
+    private GameObject[] _powerUpPrefabs;
 
     [SerializeField]
     private float _minimumPowerUpTimeLimit = 3.0f;
@@ -177,7 +177,9 @@ public class SpawnManager : MonoBehaviour
             float top = 7.5f; //_cameraScreenToWorldPoint.y + 4f; // spawn fully above screen
 
             Vector3 randomPosition = new Vector3(UnityEngine.Random.Range(minLeft, maxRight), top, 0f);
-            GameObject powerup = Instantiate(_trippleShotPowerUpPrefab, randomPosition, Quaternion.identity);
+
+            int randomID = UnityEngine.Random.Range(0, _powerUpPrefabs.Length);
+            GameObject powerup = Instantiate(_powerUpPrefabs[randomID], randomPosition, Quaternion.identity);
         }
     }
 

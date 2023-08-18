@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
@@ -29,6 +30,13 @@ public class Player : MonoBehaviour
     [SerializeField]
     private int _lives = 3;
     private int _score = 0;
+
+    [SerializeField]
+    private int _enginesContainerIndex = 0;
+    [SerializeField]
+    private int _shieldsContainerIndex = 1;
+    [SerializeField]
+    private int _weaponsContainerIndex = 2;
 
     [SerializeField]
     private bool _isTrippleShotActive = false;
@@ -125,7 +133,58 @@ public class Player : MonoBehaviour
             StartCoroutine(PowerUpTimer(_trippleShotDuration));
         } else if (powerupID == 1)
         {
-            Debug.Log("Collected " + powerupID);
+            EnginesUpgraded(powerupID);
+        }
+    }
+
+    private int GetEngineUpgradeIndex(int id)
+    {
+        if (id == 1)
+        {
+            return 0;
+        } else
+        {
+            return -1;
+        }
+    }
+    private bool IsUpgradeAlreadyActive(int containerIndex, int upgradeIndex)
+    {
+        return transform.GetChild(containerIndex).GetChild(upgradeIndex).gameObject.activeInHierarchy;
+    }
+    private void ToggleUpgrade(int containerIndex, int upgradeIndex)
+    {
+        int childrenLength = transform.GetChild(containerIndex).childCount;
+        Debug.Log($"Have {childrenLength} indexes to check  on container index {containerIndex}");
+        for (int i = 0; i < childrenLength; i++)
+        {
+            if (i != upgradeIndex)
+            {
+                Debug.Log($"Disabling {i}");
+                transform.GetChild(containerIndex).GetChild(upgradeIndex).gameObject.SetActive(false);
+            } else
+            {
+                Debug.Log($"Enabling {i}");
+                transform.GetChild(containerIndex).GetChild(upgradeIndex).gameObject.SetActive(true);
+                Debug.Log($"Object is active? {transform.GetChild(containerIndex).GetChild(upgradeIndex).gameObject.activeSelf}");
+            }
+        }
+    }
+    private void EnginesUpgraded(int id)
+    {
+        bool isUpgradeActive = false;
+        int engineIndex = GetEngineUpgradeIndex(id);
+
+        if (engineIndex < 0)
+        {
+            Debug.LogError($"Player::EnginesUpgraded() - GetEngineUpgradeIndex({id}) returned -1");
+            return;
+        }
+
+        isUpgradeActive = IsUpgradeAlreadyActive(_enginesContainerIndex, engineIndex);
+        
+        if (isUpgradeActive != true)
+        {
+            ToggleUpgrade(_enginesContainerIndex, engineIndex);
         }
     }
     void Shoot()
